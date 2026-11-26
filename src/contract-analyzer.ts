@@ -181,3 +181,17 @@ ${params.revisedClause}`;
 
   return JSON.parse(text) as ClauseComparisonResult;
 }
+
+async function generateWithRetry<T>(fn: () => Promise<T>, retries = 2): Promise<T> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const isTransient = msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("429");
+      if (!isTransient || attempt === retries) throw err;
+      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+    }
+  }
+  throw new Error("Model temporarily unavailable after retries.");
+}
