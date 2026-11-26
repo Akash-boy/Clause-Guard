@@ -33,7 +33,7 @@ function getGeminiClient() {
   }
   return new GoogleGenAI({ apiKey });
 }
-
+const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 export async function analyzeContractInput(params: {
   contractText?: string;
   imageBase64?: string;
@@ -74,7 +74,7 @@ For each clause:
   }
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: MODEL_NAME,
     contents,
     config: {
       responseMimeType: "application/json",
@@ -147,7 +147,7 @@ REVISED CLAUSE:
 ${params.revisedClause}`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: MODEL_NAME,
     contents: prompt,
     config: {
       responseMimeType: "application/json",
