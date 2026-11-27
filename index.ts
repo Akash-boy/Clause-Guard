@@ -72,6 +72,7 @@ const ClauseSchema = z.object({
   plain_english: z.string(),
   hidden_risk: z.string(),
   suggested_counter_clause: z.string(),
+  created_at: z.string().optional(),
 });
 
 // ---------------------------------------------------------------------------
