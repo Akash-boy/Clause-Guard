@@ -1,9 +1,8 @@
-import { GoogleGenAI, Type, type Schema } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, Type, type Schema } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-const PRIMARY_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-const FALLBACK_MODEL = "gemini-2.0-flash";
+const PRIMARY_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+const FALLBACK_MODEL = "gemini-4-hydrogen";
 
 export interface AuditedClause {
   clause_title: string;
@@ -197,7 +196,11 @@ ${contractText ? `\n--- CONTRACT TEXT ---\n${contractText}` : ""}`;
         responseMimeType: "application/json",
         responseSchema: contractAuditSchema,
         temperature: 0.2,
+        thinkingConfig: {
+          thinkingLevel: ThinkingLevel.MINIMAL,
+        },
       },
+      
     })
   );
 
@@ -238,6 +241,9 @@ ${revisedClause}`;
         responseMimeType: "application/json",
         responseSchema: clauseComparisonSchema,
         temperature: 0.2,
+        thinkingConfig: {
+          thinkingLevel: ThinkingLevel.MINIMAL,
+        },
       },
     })
   );
